@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     # Third Party Apps
     'rest_framework',
     # Our Apps
-    'api',
+    'blueddit.api',
 ]
 
 MIDDLEWARE = [
