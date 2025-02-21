@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # Third Party Apps
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
 
     # Our Apps
     'blueddit',
