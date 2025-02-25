@@ -34,6 +34,7 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ['id', 'name', 'description']
 
+
 class PostTagSerializer(serializers.ModelSerializer):
     tag = serializers.StringRelatedField()
 
@@ -41,23 +42,28 @@ class PostTagSerializer(serializers.ModelSerializer):
         model = PostTag
         fields = ['tag']
 
+
 # Create post
 class PostSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
+    tag_ids = serializers.ListField(
+        child=serializers.IntegerField(), write_only=True
+    )
     user = serializers.StringRelatedField()
     post_tags = PostTagSerializer(source='posttag_set', many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'attached_picture', 'is_adult', 'community', 'tags', 'user', 'creation_date', 'aura', 'post_tags']
+        fields = ['title', 'content', 'attached_picture', 'is_adult', 'community', 'tag_ids', 'user', 'creation_date',
+                  'aura', 'post_tags']
         read_only_fields = ['user', 'creation_date', 'aura']
 
     def create(self, validated_data):
-        tags_data = validated_data.pop('tags', [])
+        tags = validated_data.pop('tag_ids', [])
         user = self.context['request'].user
         post = Post.objects.create(user=user, **validated_data)
 
-        for tag in tags_data:
+        for tag_id in tags:
+            tag = Tag.objects.get(id=tag_id)
             PostTag.objects.create(post=post, tag=tag)
         post.save()
         return post
