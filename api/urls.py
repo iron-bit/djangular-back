@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UserRegistrationView, UserProfileView, LogoutView, PostView
+from .views import UserRegistrationView, UserProfileView, LogoutView, GetPostsView, PostCreateView
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='register'),
@@ -12,5 +12,6 @@ urlpatterns = [
     # Para pedir el nuevo token, lo explicaré en clase.
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # Para crear un post 
-    path('post/', PostView.as_view(), name = 'post'),
+    path('create_post/', PostCreateView.as_view(), name = 'post'),
+    path('posts/', GetPostsView.as_view(), name = 'posts'),
 ]

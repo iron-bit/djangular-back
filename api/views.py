@@ -1,10 +1,10 @@
 from rest_framework import status, permissions, generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import Post
-from api.serializers import CreatePostSerializer
+from api.serializers import PostSerializer
 
 from api.serializers import UserRegistrationSerializer, UserProfileSerializer
 
@@ -47,12 +47,25 @@ class LogoutView(APIView):
             return Response({"message": "Logged out successfully!"}, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=400)
-        
-class PostView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
-    serializer_class = CreatePostSerializer
-    permission_classes = [permissions.AllowAny]  # Permite acceso a cualquier usuario
 
-    def perform_create(self, serializer):
-        # Asigna el usuario autenticado como autor del post
-        serializer.save(author=self.request.user)
+
+class GetPostsView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [AllowAny]
+
+class PostCreateView(generics.CreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"message": "Post created successfully!", "post": serializer.data},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
