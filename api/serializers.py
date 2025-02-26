@@ -3,7 +3,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from api.models import CustomUser, Post, Tag, PostTag
+from api.models import CustomUser, Post, Tag, PostTag, Community
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -42,6 +42,10 @@ class PostTagSerializer(serializers.ModelSerializer):
         model = PostTag
         fields = ['tag']
 
+class CommunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
+        fields = ['id', 'name', 'community_picture', 'is_adult']
 
 # Create post
 class PostSerializer(serializers.ModelSerializer):
@@ -50,17 +54,20 @@ class PostSerializer(serializers.ModelSerializer):
     )
     user = serializers.StringRelatedField()
     post_tags = PostTagSerializer(source='posttag_set', many=True, read_only=True)
+    community_id = serializers.IntegerField(write_only=True)
+    community = CommunitySerializer(read_only=True)
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'attached_picture', 'is_adult', 'community', 'tag_ids', 'user', 'creation_date',
-                  'aura', 'post_tags']
+        fields = ['title', 'content', 'attached_picture', 'is_adult', 'community', 'community_id', 'tag_ids', 'user', 'creation_date', 'aura', 'post_tags']
         read_only_fields = ['user', 'creation_date', 'aura']
 
     def create(self, validated_data):
         tags = validated_data.pop('tag_ids', [])
+        community_id = validated_data.pop('community_id')
         user = self.context['request'].user
-        post = Post.objects.create(user=user, **validated_data)
+        community = Community.objects.get(id=community_id)
+        post = Post.objects.create(user=user, community=community, **validated_data)
 
         for tag_id in tags:
             tag = Tag.objects.get(id=tag_id)
