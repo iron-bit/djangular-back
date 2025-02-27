@@ -36,7 +36,7 @@ All endpoints are secured using JWT, and the API adheres to RESTful principles f
 - **Django** – Web framework.
 - **Django REST Framework** – API framework.
 - **djangorestframework-simplejwt** – JWT authentication.
-- **SQLite/PostgreSQL** – Database (SQLite for development, PostgreSQL for production).
+- **SQLite** – Database.
 
 **Tools:**
 - **Postman** – API testing.
