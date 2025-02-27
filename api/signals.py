@@ -8,7 +8,7 @@ def create_default_tags(sender, **kwargs):
     default_tags = [
         {"name": "social", "description": "All about social interactions."},
         {"name": "health", "description": "Health and wellness discussions."},
-        {"name": "technology", "description": "All about tech."},
+        {"name": "tech", "description": "All about tech."},
         {"name": "science", "description": "Scientific discussions."},
         {"name": "art", "description": "Artistic expressions and discussions."},
     ]
