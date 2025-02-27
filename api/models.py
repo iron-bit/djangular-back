@@ -4,7 +4,7 @@ from django.db import models
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    profile_picture = models.CharField(max_length=255, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     REQUIRED_FIELDS = ["email"]
@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
         return self.username
 
 class Community(models.Model):
-    community_picture = models.ImageField(upload_to='images/community_pictures/', null=True, default='images/community_pictures/default.jpg')
+    community_picture = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=30, null=False, unique=True)
     is_adult = models.BooleanField(null=False)
 
@@ -31,7 +31,7 @@ class UserInCommunity(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50, null=False)
     content = models.TextField(null=False)
-    attached_picture = models.ImageField(upload_to='images/post_picture/', null=True)
+    attached_picture = models.CharField(max_length=255, null=True, blank=True)
     aura = models.IntegerField(null=False, default=0)
     is_adult = models.BooleanField(null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
