@@ -78,38 +78,32 @@ class PostCreateView(generics.CreateAPIView):
             headers=headers
         )
 
+
 # UpdateAura
 class UpdateAura(generics.GenericAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
-    # sumamos
-    def post(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         post_id = kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
 
-        post.aura +=1
+        action = request.data.get('action')
+        if action == 'sumar':
+            post.aura += 1
+            message = "Aura increased successfully!"
+        elif action == 'restar':
+            post.aura -= 1
+            message = "Aura decreased successfully!"
+        else:
+            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+
         post.save()
         serializer = self.get_serializer(post)
         return Response(
-            {"message": "Aura created successfully!", "post": serializer.data},
-            status=status.HTTP_201_CREATED,
-        )
-
-    # restamos
-    def delete(self, request, *args, **kwargs):
-        post_id = kwargs.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
-
-
-        post.aura -= 1
-        post.save()
-
-        serializer = self.get_serializer(post)
-        return Response(
-            {"message": "Aura decreased", "post": serializer.data},
-            status=status.HTTP_200_OK
+            {"message": message, "post": serializer.data},
+            status=status.HTTP_200_OK,
         )
 
 
