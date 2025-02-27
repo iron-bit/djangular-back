@@ -1,10 +1,21 @@
 from rest_framework import serializers
-from api.models import CustomUser
+from api.models import CustomUser, Tag, PostTag, Community, Post
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'password', 'age', 'profile_picture']
+
+    def validate(self, data):
+        """Check if the username or email already exists."""
+        if CustomUser.objects.filter(username=data['username']).exists():
+            raise serializers.ValidationError({"username": "This username is already taken."})
+
+        if CustomUser.objects.filter(email=data['email']).exists():
+            raise serializers.ValidationError({"email": "This email is already registered."})
+
+        return data
 
     def create(self, validated_data):
         user = CustomUser(
@@ -23,6 +34,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -36,10 +48,12 @@ class PostTagSerializer(serializers.ModelSerializer):
         model = PostTag
         fields = ['tag']
 
+
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
         fields = ['id', 'name', 'community_picture', 'is_adult']
+
 
 # Create post
 class PostSerializer(serializers.ModelSerializer):
@@ -53,7 +67,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id','title', 'content', 'attached_picture', 'is_adult', 'community', 'community_id', 'tag_ids', 'user', 'creation_date', 'aura', 'post_tags']
+        fields = ['id', 'title', 'content', 'attached_picture', 'is_adult', 'community', 'community_id', 'tag_ids',
+                  'user', 'creation_date', 'aura', 'post_tags']
         read_only_fields = ['user', 'creation_date']
 
     def create(self, validated_data):

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     age = models.PositiveIntegerField(null=True, blank=True)
@@ -12,6 +13,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class Community(models.Model):
     community_picture = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=30, null=False, unique=True)
@@ -20,6 +22,7 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
+
 class UserInCommunity(models.Model):
     is_admin = models.BooleanField(null=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -27,6 +30,7 @@ class UserInCommunity(models.Model):
 
     def __str__(self):
         return self.user.username + ' in ' + self.community.name
+
 
 class Post(models.Model):
     title = models.CharField(max_length=50, null=False)
@@ -41,12 +45,14 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=30, null=False, unique=True)
     description = models.TextField(null=False)
 
     def __str__(self):
         return self.name
+
 
 class PostTag(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

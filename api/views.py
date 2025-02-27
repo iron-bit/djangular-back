@@ -12,9 +12,15 @@ from api.serializers import UserRegistrationSerializer, UserProfileSerializer
 class UserRegistrationView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UserRegistrationSerializer(data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+
+        # Check if the error is due to username or email conflict
+        if 'username' in serializer.errors or 'email' in serializer.errors:
+            return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -53,6 +59,7 @@ class GetPostsView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
+
 
 class PostCreateView(generics.CreateAPIView):
     queryset = Post.objects.all()

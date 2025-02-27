@@ -12,7 +12,7 @@ urlpatterns = [
     # Para pedir el nuevo token, lo explicaré en clase.
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # Para crear un post 
-    path('create_post/', PostCreateView.as_view(), name = 'post'),
-    path('posts/', GetPostsView.as_view(), name = 'posts'),
+    path('create_post/', PostCreateView.as_view(), name='post'),
+    path('posts/', GetPostsView.as_view(), name='posts'),
     path('aura/<int:post_id>/', UpdateAura.as_view(), name='vote_post'),
-    ]
+]
