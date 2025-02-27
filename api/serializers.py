@@ -3,7 +3,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from api.models import CustomUser, Post, Tag, PostTag, Community
+from api.models import CustomUser, Post, Tag, PostTag, Community, UserInCommunity
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -68,3 +68,9 @@ class PostSerializer(serializers.ModelSerializer):
             PostTag.objects.create(post=post, tag=tag)
         post.save()
         return post
+
+class UserInCommunitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserInCommunity
+        fields = ['user', 'community', 'is_admin']
+

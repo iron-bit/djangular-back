@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import Post
-from api.serializers import PostSerializer
+from api.serializers import PostSerializer, UserInCommunitySerializer
 
 from api.serializers import UserRegistrationSerializer, UserProfileSerializer
 
@@ -90,7 +90,7 @@ class UpdateAura(generics.GenericAPIView):
             status=status.HTTP_201_CREATED,
         )
     
-    # restamos
+    # restamos 
     def delete(self, request, *args, **kwargs):
         post_id = kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
@@ -104,3 +104,24 @@ class UpdateAura(generics.GenericAPIView):
             {"message": "Aura decreased", "post": serializer.data},
             status=status.HTTP_200_OK
         )
+
+class UserInCommunityView(generics.GenericAPIView):
+    queryset = Post.objects.all()
+    serializer_class = UserInCommunitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        action = request.data.get('action')  
+        post = get_object_or_404(Post, id=post_id)
+
+# no deja hacer dos def post añadir if
+        if action == 'follow':
+            post.save()
+            serializer = self.get_serializer(post)
+            return Response(
+                {"message": "Follow", "post": serializer.data},
+                status=status.HTTP_201_CREATED,
+            )
+            # añadir el else 
+
