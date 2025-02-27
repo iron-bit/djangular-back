@@ -1,3 +1,5 @@
+from dataclasses import fields
+
 from rest_framework import serializers
 from api.models import CustomUser, Tag, PostTag, Community, Post
 
@@ -33,12 +35,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
-
-
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ['id', 'name', 'description']
 
 
 class PostTagSerializer(serializers.ModelSerializer):
@@ -83,9 +79,3 @@ class PostSerializer(serializers.ModelSerializer):
             PostTag.objects.create(post=post, tag=tag)
         post.save()
         return post
-
-    def updateAura(self, instance, validated_data):
-        if 'aura' in validated_data:
-            instance.aura = validated_data['aura']
-        instance.save()
-        return instance

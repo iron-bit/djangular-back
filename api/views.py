@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status, permissions, generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -75,6 +76,40 @@ class PostCreateView(generics.CreateAPIView):
             {"message": "Post created successfully!", "post": serializer.data},
             status=status.HTTP_201_CREATED,
             headers=headers
+        )
+
+# UpdateAura
+class UpdateAura(generics.GenericAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    # sumamos
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+
+        post.aura +=1
+        post.save()
+        serializer = self.get_serializer(post)
+        return Response(
+            {"message": "Aura created successfully!", "post": serializer.data},
+            status=status.HTTP_201_CREATED,
+        )
+
+    # restamos
+    def delete(self, request, *args, **kwargs):
+        post_id = kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+
+
+        post.aura -= 1
+        post.save()
+
+        serializer = self.get_serializer(post)
+        return Response(
+            {"message": "Aura decreased", "post": serializer.data},
+            status=status.HTTP_200_OK
         )
 
 
