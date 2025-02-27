@@ -59,8 +59,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'attached_picture', 'is_adult', 'community', 'community_id', 'tag_ids', 'user', 'creation_date', 'aura', 'post_tags']
-        read_only_fields = ['user', 'creation_date', 'aura']
+        fields = ['id','title', 'content', 'attached_picture', 'is_adult', 'community', 'community_id', 'tag_ids', 'user', 'creation_date', 'aura', 'post_tags']
+        read_only_fields = ['user', 'creation_date']
 
     def create(self, validated_data):
         tags = validated_data.pop('tag_ids', [])
@@ -74,3 +74,9 @@ class PostSerializer(serializers.ModelSerializer):
             PostTag.objects.create(post=post, tag=tag)
         post.save()
         return post
+    
+    def updateAura(self, instance, validated_data):
+        if 'aura' in validated_data:
+            instance.aura = validated_data['aura']
+        instance.save()
+        return instance
