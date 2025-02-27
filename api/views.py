@@ -115,7 +115,7 @@ class UserInCommunityView(generics.GenericAPIView):
         action = request.data.get('action')  
         post = get_object_or_404(Post, id=post_id)
 
-# no deja hacer dos def post añadir if
+
         if action == 'follow':
             post.save()
             serializer = self.get_serializer(post)
@@ -123,5 +123,13 @@ class UserInCommunityView(generics.GenericAPIView):
                 {"message": "Follow", "post": serializer.data},
                 status=status.HTTP_201_CREATED,
             )
-            # añadir el else 
+            
+        elif action == 'unfollow':
+            post.save()
+            serializer = self.get_serializer(post)
+            return Response(
+                {"message": "UnFollow", "post": serializer.data},
+                status=status.HTTP_201_CREATED,
+            )
+
 
