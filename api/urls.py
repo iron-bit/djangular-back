@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import UserRegistrationView, UserProfileView, UpdateAura, LogoutView, GetPostsView, PostCreateView
+from .views import UserRegistrationView, UserProfileView, LogoutView, GetPostsView, PostCreateView
+# from .views import UserRegistrationView, UserProfileView, UpdateAura, LogoutView, GetPostsView, PostCreateView
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='register'),
@@ -14,5 +15,5 @@ urlpatterns = [
     # Para crear un post 
     path('create_post/', PostCreateView.as_view(), name='post'),
     path('posts/', GetPostsView.as_view(), name='posts'),
-    path('aura/<int:post_id>/', UpdateAura.as_view(), name='vote_post'),
+    # path('aura/<int:post_id>/', UpdateAura.as_view(), name='vote_post'),
 ]
