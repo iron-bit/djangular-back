@@ -3,10 +3,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from api.models import Post
+from api.models import Post, Community
 from api.serializers import PostSerializer
 
-from api.serializers import UserRegistrationSerializer, UserProfileSerializer
+from api.serializers import UserRegistrationSerializer, UserProfileSerializer, CommunitySerializer
 
 
 class UserRegistrationView(APIView):
@@ -76,3 +76,9 @@ class PostCreateView(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+
+class CommunitiesView(generics.ListAPIView):
+    queryset = Community.objects.all()
+    serializer_class = CommunitySerializer
+    permission_classes = [AllowAny]
