@@ -29,12 +29,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'age', 'profile_picture']
 
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = ['id', 'name', 'description']
-
-
 class PostTagSerializer(serializers.ModelSerializer):
     tag = serializers.StringRelatedField()
 
@@ -74,9 +68,3 @@ class PostSerializer(serializers.ModelSerializer):
             PostTag.objects.create(post=post, tag=tag)
         post.save()
         return post
-    
-    def updateAura(self, instance, validated_data):
-        if 'aura' in validated_data:
-            instance.aura = validated_data['aura']
-        instance.save()
-        return instance
