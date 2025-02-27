@@ -10,7 +10,6 @@ Blueddit Backend is a RESTful API built with Django and Django REST Framework th
 
 - [Introduction](#introduction)
 - [🛠 Tech Stack](#-tech-stack)
-- [🚀 Deployment](#-deployment)
 - [✍️ Authors](#authors)
 - [License](#license)
 
